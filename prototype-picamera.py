@@ -18,6 +18,7 @@ def read_kbd_input(inputQueue):
  
 def main():
   camera = picamera.PiCamera()
+  # Optional resolutions: 1920x1080, 1280x720, 640x480
   camera.resolution = (1280, 720)
 
   # Get current datetime and compose output video file name.
