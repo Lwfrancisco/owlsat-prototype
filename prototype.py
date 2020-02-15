@@ -4,6 +4,10 @@ import datetime
 import threading
 import queue
 
+def make_1080p(video):
+  video.set(3, 1920)
+  video.set(4, 1080)
+
 def read_kbd_input(inputQueue):
   print('Press q to quit:')
   while (True):
@@ -23,17 +27,23 @@ def main():
   if (cap.isOpened() == False):
     print("Unable to read camera feed")
   
+  # Change default resolution of the system.
+  make_1080p(cap)
+
   # Default resolutions of the frame are obtained.The default resolutions are system dependent.
   # We convert the resolutions from float to integer.
   frame_width = int(cap.get(3))
   frame_height = int(cap.get(4))
+  fps = cap.get(cv2.CAP_PROP_FPS)
+#  cap.set(cv2.CAP_PROP_FPS, 20)
+#  print("Framerate = %0.2f FPS" % (fps))
 
   # Get current datetime and compose output video file name.
   dt = datetime.datetime.now()
   output_file = f"{dt.year}-{dt.month}-{dt.day}_{dt.hour}:{dt.minute}:{dt.second}.avi"
   
   # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-  out = cv2.VideoWriter(output_file,cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+  out = cv2.VideoWriter(output_file,cv2.VideoWriter_fourcc('M','J','P','G'), 30, (frame_width,frame_height))
 
   # Keyboard input queue to pass data from the thread reading the keyboard inputs to the main thread.
   inputQueue = queue.Queue()
@@ -46,7 +56,13 @@ def main():
 
   terminated = False # Sets initial condition on while loop
 
+  frame_count = 0
+
   while not terminated:
+    # wait before each frame is written. wait is relative to fps
+    cv2.waitKey(int(1000 / fps))
+    frame_count = frame_count + 1
+
     ret, frame = cap.read()
   
     if ret == True: 
@@ -54,13 +70,6 @@ def main():
       # Write the frame into the file
       out.write(frame)
   
-      # # Display the resulting frame
-      # cv2.imshow('frame',frame)
-  
-      # # Press Q on keyboard to stop recording
-      # if cv2.waitKey(1) & 0xFF == ord('q'):
-      #   break
-
     # Break the loop
     else:
       terminated = True
@@ -77,8 +86,8 @@ def main():
   cap.release()
   out.release()
   
-  # # Closes all the frames
-  # cv2.destroyAllWindows()
+#  print(frame_count)
+#  print(1000 / fps)
 
 if __name__ == "__main__":
   main()
