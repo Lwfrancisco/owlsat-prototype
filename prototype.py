@@ -36,15 +36,15 @@ def main():
     print("Unable to read camera feed")
   
   # Change default resolution of the system.
-  make_1080p(cap)
+  make_480p(cap)
 
   # Default resolutions of the frame are obtained.The default resolutions are system dependent.
   # We convert the resolutions from float to integer.
   frame_width = int(cap.get(3))
   frame_height = int(cap.get(4))
   fps = cap.get(cv2.CAP_PROP_FPS)
-#  cap.set(cv2.CAP_PROP_FPS, 20)
-#  print("Framerate = %0.2f FPS" % (fps))
+  cap.set(cv2.CAP_PROP_FPS, 90)
+  print("Framerate = %0.2f FPS" % (fps))
 
   # Get current datetime and compose output video file name.
   dt = datetime.datetime.now()
@@ -94,8 +94,8 @@ def main():
   cap.release()
   out.release()
   
-#  print(frame_count)
-#  print(1000 / fps)
+  print(frame_count)
+  print(1000 / fps)
 
 if __name__ == "__main__":
   main()
