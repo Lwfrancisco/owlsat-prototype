@@ -8,6 +8,14 @@ def make_1080p(video):
   video.set(3, 1920)
   video.set(4, 1080)
 
+def make_720p(video):
+  video.set(3, 1280)
+  video.set(4, 720)
+
+def make_480p(video):
+   video.set(3, 640)
+   video.set(4, 480)
+
 def read_kbd_input(inputQueue):
   print('Press q to quit:')
   while (True):
